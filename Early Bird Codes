@@ -1,0 +1,6 @@
+sudo apt-get install earlyoom
+sudo nano /etc/default/earlyoom
+EARLYOOM_ARGS="-r 10 -M 5097152"
+sudo systemctl restart earlyoom
+journalctl -u earlyoom -f
+5097152 measn 5 gb
