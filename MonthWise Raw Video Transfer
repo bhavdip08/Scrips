@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# Source and Destination Paths
+SRC_BASE="/opt/aivid-storage-disk-0/aividsetup/master/aividpv/acld-storage-backend/bot-snapshots"
+DEST_BASE="/home/aividvision/Downloads/Bot_Images"
+
+# Loop through each node folder (e.g., 10d1c10d2, 11d1c11d2, etc.)
+for node in "$SRC_BASE"/*; do
+    if [[ -d "$node" ]]; then
+        node_name=$(basename "$node")  # Extract node folder name
+
+        # Loop through each bot folder inside the node
+        for bot in "$node"/*; do
+            if [[ -d "$bot" ]]; then
+                bot_name=$(basename "$bot")  # Extract bot folder name
+                src_month_path="$bot/2025/3"  # Path to March folder
+
+                # Check if the "2025/3" folder exists
+                if [[ -d "$src_month_path" ]]; then
+                    # Loop through all dates (1 to 31)
+                    for day in {1..31}; do
+                        src_day_path="$src_month_path/$day"
+
+                        # Check if the day folder exists
+                        if [[ -d "$src_day_path" ]]; then
+                            dest_path="$DEST_BASE/$node_name/$bot_name/2025/3/$day"  # Destination path
+
+                            # Create destination folder
+                            mkdir -p "$dest_path"
+
+                            # Copy only "img_*.jpeg" files
+                            find "$src_day_path" -maxdepth 1 -type f -name "img_*.jpeg" -exec cp {} "$dest_path" \;
+                        fi
+                    done
+                fi
+            fi
+        done
+    fi
+done
+
+echo "All img_*.jpeg files from March copied successfully from all nodes!"
