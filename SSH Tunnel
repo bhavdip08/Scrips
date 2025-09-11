@@ -1,0 +1,38 @@
+For Tunnel Use This System
+
+- ssh aivid31@192.168.222.254
+
+- pwd : a!v!d_123
+
+If Tunnel is Not working
+
+- lsof -i:<Port Number>
+
+- kill <First PID>
+
+----------------------------------------
+
+cat << EOF > /etc/aivid/reboot.sh
+#!/bin/bash
+while true; do
+    sshpass -e ssh -NTC -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no \
+        -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes \
+        -R 0.0.0.0:31212:127.0.0.1:32500 \
+        -R 0.0.0.0:31213:127.0.0.1:32700 \
+        -R 0.0.0.0:31214:127.0.0.1:32400 \
+        -R 0.0.0.0:31215:127.0.0.1:22 \
+        -R 0.0.0.0:31221:127.0.0.1:32568 \
+        -R 0.0.0.0:31531:127.0.0.1:32000 \
+        -R 0.0.0.0:31532:127.0.0.1:32568 \
+        -R 0.0.0.0:31533:127.0.0.1:32569 \
+        -R 0.0.0.0:31534:127.0.0.1:31216 \
+        -R 0.0.0.0:31535:127.0.0.1:30123 \
+        aivid31@controlcenter.aividtechvision.com -p 2222
+    sleep 10
+    exit 0
+done
+EOF
+
+----------------------------------------
+
+systemctl restart reboot
