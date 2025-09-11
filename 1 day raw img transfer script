@@ -1,0 +1,33 @@
+#!/bin/bash
+
+# Source and Destination Paths
+SRC_BASE="/opt/aivid-storage-disk-0/aividsetup/master/aividpv/acld-storage-backend/bot-snapshots"
+DEST_BASE="/home/ubuntu/Downloads/Bot_Images"
+
+# Loop through each node folder (e.g., 10d1c10d2, 11d1c11d2, etc.)
+for node in "$SRC_BASE"/*; do
+    if [[ -d "$node" ]]; then
+        node_name=$(basename "$node")  # Extract node folder name
+
+        # Loop through each bot folder inside the node
+        for bot in "$node"/*; do
+            if [[ -d "$bot" ]]; then
+                bot_name=$(basename "$bot")  # Extract bot folder name
+                src_path="$bot/2025/4/20"  # Target only the "20" folderchr
+
+                # Check if the specific day folder "20" exists
+                if [[ -d "$src_path" ]]; then
+                    dest_path="$DEST_BASE/$node_name/$bot_name/2025/4/20"  # Destination path
+
+                    # Create destination folder
+                    mkdir -p "$dest_path"
+
+                    # Copy only "rawImg_*.jpeg" files
+                    find "$src_path" -maxdepth 1 -type f -name "rawImg_*.jpeg" -exec cp {} "$dest_path" \;
+                fi
+            fi
+        done
+    fi
+done
+
+echo "All rawImg_*.jpeg files from day 20 copied successfully from all nodes!"
