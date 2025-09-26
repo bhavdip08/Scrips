@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# List of images
+images=(
+  "aividtech/notification:936e494_20250910_1732"
+  "aividtech/operations_portal_frontend:2198dfa2_20250925_1234"
+  "aividtech/operations_portal_backend:535a8024_20250926_0344"
+  "aividtech/worker_node_api:fe79c60_20250925_1244"
+  "aividtech/master_node_api:65ad523_20250311_1854"
+  "aividtech/aivid_vision_insights:ab14901b67_20250923_1120"
+  "aividtech/smtc_api_gateway:2645eef_20250711_1803"
+  "aividtech/smtc_smart_upload:65b8091_20250529_1448"
+  "aividtech/smtc_storage_manager:5c8f295_20250529_1448"
+  "aividtech/aivid_retention:8d5abda_20250324_1933"
+  "aividtech/insight-sharing:2c7cafb_20250813_1737"
+  "aividtech/health_monitor:abee99e_20250723_1449"
+  "aividtech/aivid_eye_gpu_fire-smoke-det_xeon_gst:e1e0890_20250925_2254"
+  "aividtech/aivid_eye_gpu_safety-ppe_xeon_gst:08cff48_20250925_2244"
+  "aividtech/aivid_eye_gpu_intrusion-det_xeon_gst:caf9dad_20250925_2256"
+  "aividtech/aivid_eye_anpr-det_xeon_gst:0f69bcd_20250925_1249"
+  "aividtech/aivid_eye_phone-det_xeon_gst:68e9853_20250924_1502"
+)
+
+# Create a folder to store tar files
+mkdir -p docker_images_backup
+
+# Pull and save each image
+for img in "${images[@]}"; do
+    echo "Pulling $img ..."
+    docker pull "$img"
+
+    # Replace '/' and ':' with '_' for tar file naming
+    filename=$(echo $img | tr '/:' '_').tar
+    echo "Saving $img to docker_images_backup/$filename ..."
+    docker save -o "docker_images_backup/$filename" "$img"
+done
+
+echo "✅ All images pulled and saved into docker_images_backup/"
